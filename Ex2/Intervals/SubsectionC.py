@@ -1,12 +1,12 @@
-import numpy as np
 from intervals import find_best_interval
 from Utils import *
+import matplotlib.pyplot as plt
 
 
 def plot(esM, epM, M):
 
-    plt.plot(M, esM, 'r', label='empirical error')
     plt.plot(M, epM, 'g', label='true error')
+    plt.plot(M, esM, 'r', label='empirical error')
     plt.xlim([-10, 110])
     plt.xlabel('number of samples(m)')
     plt.ylabel('error')

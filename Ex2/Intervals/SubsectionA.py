@@ -1,5 +1,6 @@
 from intervals import find_best_interval
 from Utils import *
+import matplotlib.pyplot as plt
 
 
 def plot(xs, ys, intervals, title):
