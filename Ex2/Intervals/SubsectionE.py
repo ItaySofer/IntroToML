@@ -3,14 +3,14 @@ from Utils import *
 import matplotlib.pyplot as plt
 
 
-def plot(esK, epK, K):
+def plot(esK, esHoldoutK, K):
 
-    plt.plot(K, epK, 'g', label='true error')
+    plt.plot(K, esHoldoutK, 'g', label='holdout error')
     plt.plot(K, esK, 'r', label='empirical error')
     plt.xlim([-5, 25])
     plt.xlabel('number of intervals(k)')
     plt.ylabel('error')
-    title = 'section D - empirical and true errors'
+    title = 'section E - empirical and holdout errors'
     plt.title(title)
     plt.grid(True)
     plt.legend()
@@ -21,12 +21,13 @@ m = 50
 K = range(1, 21, 1)
 
 xs, ys = sample(m)
+xsHoldout, ysHoldout = sample(m)
 
 esK = []
-epK = []
+esHoldoutK = []
 for k in K:
     intervals, es = find_best_interval(xs, ys, k)
     esK.append(float(es)/m)
-    epK.append(calculateTrueError(intervals))
+    esHoldoutK.append(calculateHoldoutError(intervals, xsHoldout, ysHoldout))
 
-plot(esK, epK, K)
+plot(esK, esHoldoutK, K)

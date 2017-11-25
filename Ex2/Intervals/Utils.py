@@ -55,3 +55,13 @@ def calculateTrueError(intervals):
 
     return np.dot(np.multiply(pY0GivenX, px), delta0) + np.dot(np.multiply(pY1GivenX, px), delta1)
 
+
+def calculateHoldoutError(intervals, xsHoldout, ysHoldout):
+    delta = 0
+    for i in range(0, len(xsHoldout)):
+        x = xsHoldout[i]
+        y = ysHoldout[i]
+        hOfX = np.any(filter(lambda interval: interval[0] <= x <= interval[1], intervals))
+        if y != hOfX:
+            delta += 1
+    return float(delta)/len(xsHoldout)
