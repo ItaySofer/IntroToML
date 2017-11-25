@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 
 def plot(esK, esHoldoutK, K):
 
-    plt.plot(K, esHoldoutK, 'g', label='holdout error')
-    plt.plot(K, esK, 'r', label='empirical error')
+    plt.scatter(K, esHoldoutK, color='g', label='holdout error')
+    plt.scatter(K, esK, color='r', label='empirical error')
     plt.xlim([-5, 25])
     plt.xlabel('number of intervals(k)')
     plt.ylabel('error')
