@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 
 def fetch_mnist():
+    ''' Fetches the MNIST dataset divided to "data" and "labels" '''
     mnist = fetch_mldata('MNIST original')
     data = mnist['data']
     labels = mnist['target']
@@ -14,6 +15,7 @@ def fetch_mnist():
 
 
 def prepare_dataset(data, labels):
+    ''' Divides the MNIST dataset according to a pre-defined seed and pre-defined % of training / test samples'''
     idx = numpy.random.RandomState(0).choice(70000, 11000)
     train = data[idx[:10000], :].astype(int)
     train_labels = labels[idx[:10000]]
@@ -23,6 +25,7 @@ def prepare_dataset(data, labels):
 
 
 def knn(images, labels, query_img, k):
+    ''' Activates the K-Nearest-Neighbour algorithm on the query_img against the images/labels dataset, using the k parameter'''
     query_reshaped = query_img.reshape(1, len(query_img))   # Convert to 2d shape for scipy
     distances = scipy.spatial.distance.cdist(images, query_reshaped, 'euclidean')
     labeled_dists = list(zip(labels, distances))
@@ -34,6 +37,7 @@ def knn(images, labels, query_img, k):
 
 
 def calculate_accuracy(train, train_labels, test, test_labels, k):
+    ''' Calculate the accuracy for the KNN algorithm for given K on the test set against the training set'''
     correct_predictions = 0
     total_predictions = len(test)
 
