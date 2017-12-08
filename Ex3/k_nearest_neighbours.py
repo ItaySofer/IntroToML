@@ -93,7 +93,7 @@ def ex_1_c():
 def ex_1_d():
     data, labels = fetch_mnist()
     train, train_labels, test, test_labels = prepare_dataset(data, labels)
-    k = 0
+    k = 1
     accuracies = []
 
     for n in xrange(100, 5000, 100):
