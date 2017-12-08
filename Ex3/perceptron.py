@@ -78,8 +78,21 @@ def ex_2_b():
     plt.imshow(np.reshape(weight_mat, (28, 28)), interpolation='nearest', cmap='gray')
     plt.savefig("Section 2.B - Perceptron Weight Matrix.png")
 
+
 def ex_2_c():
+    feature_dim = hw3.train_data.shape[1]
+
+    perceptron = Perceptron(feature_dim)
+    perceptron.train(hw3.train_data, hw3.train_labels)
+    predictions = perceptron.predict(hw3.test_data)
+    accuracy = calculate_accuracy(predictions, hw3.test_labels)
+    print("Perceptron's accuracy for the entire test set after being trained on entire training set is: " +
+          "{:.2f}".format(accuracy))
+
+
+def ex_2_d():
     pass
+
 
 parser = argparse.ArgumentParser(description='Choose a subsection')
 parser.add_argument('--section', help='A section of the ex')
@@ -90,3 +103,5 @@ elif args.section == '2':
     ex_2_b()
 elif args.section == '3':
     ex_2_c()
+elif args.section == '4':
+    ex_2_d()
