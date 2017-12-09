@@ -91,7 +91,22 @@ def ex_2_c():
 
 
 def ex_2_d():
-    pass
+    total_results_to_store = 5  # Out of these 5 examples we chose indices 80, 506
+    feature_dim = hw3.train_data.shape[1]
+
+    perceptron = Perceptron(feature_dim)
+    perceptron.train(hw3.train_data, hw3.train_labels)
+    predictions = perceptron.predict(hw3.test_data)
+
+    processed_results = np.subtract(predictions, hw3.test_labels)
+    wrong_indices = np.nonzero(processed_results)[0]
+
+    for result_count, wrong_index in enumerate(wrong_indices):
+        if result_count >= total_results_to_store:
+            break
+        plt.imshow(np.reshape(hw3.test_data_unscaled[wrong_index], (28, 28)), interpolation='nearest', cmap='gray')
+        plt.savefig("Section 2.D - Wrong prediction #" + str(wrong_index) + "_label_" + str(hw3.test_labels[wrong_index]) + ".png")
+        result_count += 1
 
 
 parser = argparse.ArgumentParser(description='Choose a subsection')
