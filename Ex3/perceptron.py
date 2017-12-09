@@ -74,7 +74,8 @@ def ex_2_b():
     perceptron.train(hw3.train_data, hw3.train_labels)
 
     # Normalize w to range [0, 255] for visualization
-    weight_mat = np.divide(np.subtract(perceptron.w, np.min(perceptron.w)), np.max(perceptron.w)) * 255
+    weight_mat = np.divide(np.subtract(perceptron.w, np.min(perceptron.w)),
+                           np.subtract(np.max(perceptron.w), np.min(perceptron.w))) * 255
     plt.imshow(np.reshape(weight_mat, (28, 28)), interpolation='nearest', cmap='gray')
     plt.savefig("Section 2.B - Perceptron Weight Matrix.png")
 
