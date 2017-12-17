@@ -4,7 +4,7 @@ network.py
 
 import random
 import numpy as np
-import math
+from numpy import linalg as LA
 
 class Network(object):
 
@@ -64,6 +64,26 @@ class Network(object):
             test_accuracy.append(self.one_label_accuracy(test_data))
         return training_accuracy, training_loss, test_accuracy
 
+    def SGD_with_gradient_norms(self, training_data, epochs, mini_batch_size, learning_rate,
+            test_data):
+        """Train the neural network using mini-batch stochastic
+        gradient descent.  The ``training_data`` is a list of tuples
+        ``(x, y)`` representing the training inputs and the desired
+        outputs.  """
+        gradient_norms = []
+        print("Initial test accuracy: {0}".format(self.one_label_accuracy(test_data)))
+        n = len(training_data)
+        for j in range(epochs):
+            random.shuffle(list(training_data))
+            mini_batches = [
+                training_data[k:k+mini_batch_size]
+                for k in range(0, n, mini_batch_size)]
+            for mini_batch in mini_batches:
+                gradient_norms_epoch = self.update_mini_batch_with_gradient_norm(mini_batch, learning_rate)
+            gradient_norms.append(gradient_norms_epoch)
+            print ("Epoch {0} test accuracy: {1}".format(j, self.one_label_accuracy(test_data)))
+
+        return gradient_norms
 
     def update_mini_batch(self, mini_batch, learning_rate):
         """Update the network's weights and biases by applying
@@ -79,6 +99,25 @@ class Network(object):
                         for w, nw in zip(self.weights, nabla_w)]
         self.biases = [b - (learning_rate / len(mini_batch)) * nb
                        for b, nb in zip(self.biases, nabla_b)]
+
+    def update_mini_batch_with_gradient_norm(self, mini_batch, learning_rate):
+        """Update the network's weights and biases by applying
+        stochastic gradient descent using backpropagation to a single mini batch.
+        The ``mini_batch`` is a list of tuples ``(x, y)``."""
+        nabla_b = [np.zeros(b.shape) for b in self.biases]
+        nabla_w = [np.zeros(w.shape) for w in self.weights]
+        for x, y in mini_batch:
+            delta_nabla_b, delta_nabla_w = self.backprop(x, y)
+            nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
+            nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
+
+        self.weights = [w - (learning_rate / len(mini_batch)) * nw
+                        for w, nw in zip(self.weights, nabla_w)]
+        self.biases = [b - (learning_rate / len(mini_batch)) * nb
+                       for b, nb in zip(self.biases, nabla_b)]
+
+        gradient_norms = [LA.norm(np.array(dl_dbi) / len(mini_batch)) for dl_dbi in nabla_b]
+        return gradient_norms
 
     def backprop(self, x, y):
         zl, al = self.forward(x)
