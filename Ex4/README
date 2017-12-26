@@ -1,0 +1,27 @@
+===============================================
+Intro to Machine Learning - Ex4
+===============================================
+Or Perel   - 200732444 [orr.perel@gmail.com]
+Itai Sofer - 201507357 [sofer.itay@gmail.com]
+===============================================
+
+1) Instructions:
+Run each of the following executables with:
+/usr/bin/python sgd_svm.py --section [#section_num]
+/usr/bin/python [Itay - fill here] --section [#section_num]
+
+Each script corresponds to the relevant question.
+Each #section_num should represent the corresponding section (e.g: a=1, b=2, etc).
+
+-- IMPORTANT NOTE: Some routines output both a saved figure and a displayed plot (using matplotlib's imshow).
+If you're using remote control on Nova, make sure your connection supports the channeling of gui windows to the host machine,
+otherwise the script might appear "stuck" until the figure window is closed.
+
+2) The only other auxilary file required is hw4.py - as supplied with the Exercise without modification, and present in the directory.
+[Itay, add more files if they are not runnable: main.py? data.py?]
+
+3) Plots are saved within the same folder. The following plots & charts are included and attached to the printed doc as well:
+Section 1.A - SGD-SVM Accuracy for $\eta_0$
+Section 1.B - SGD-SVM Accuracy for C
+Section 1.C - SGD-SVM Weight Matrix
+[Itay, add your plots here]

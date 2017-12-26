@@ -85,8 +85,8 @@ def ex_4_a():
     C = 1
     iterations_per_validation = 10
     log_resolution_min = -5
-    log_resolution_max = 2
-    step_range = [10 ** x for x in np.arange(log_resolution_min, log_resolution_max+1, 0.25)]
+    log_resolution_max = 3
+    step_range = [10 ** x for x in np.arange(log_resolution_min, log_resolution_max, 0.25)]
     validation_accuracies = []
 
     for basic_step_size in step_range:
@@ -105,16 +105,76 @@ def ex_4_a():
     y_max = max(validation_accuracies) + 1
     plot(x=step_range, y=validation_accuracies, legend='Validation Accuracies',
          x_min=step_range[0], x_max=step_range[-1], y_min=y_min, y_max=y_max,
-         xlabel=r'$\eta_0$' + ' [Step Size]', ylabel='Accuracy', title='Section 4.A - SGD-SVM Accuracy for ' + r'$\eta_0$')
+         xlabel=r'$\eta_0$' + ' [Step Size]', ylabel='Accuracy', title='Section 1.A - SGD-SVM Accuracy for ' + r'$\eta_0$')
+
 
 def ex_4_b():
-    pass
+    feature_dim = hw4.train_data.shape[1]
+    T = 1000
+    basic_step_size = 0.55
+    iterations_per_validation = 10
+    log_resolution_min = -5
+    log_resolution_max = 5
+    c_range = [10 ** x for x in np.arange(log_resolution_min, log_resolution_max, 0.25)]
+    validation_accuracies = []
+
+    for C in c_range:
+        accumulated_validation_accuracy = 0
+
+        for _ in range(iterations_per_validation):
+            classifier = SGD_SVM(dim=feature_dim)
+            classifier.train(x=hw4.train_data, y=hw4.train_labels, C=C, T=T, basic_step_size=basic_step_size)
+            validation_predictions = classifier.predict(x=hw4.validation_data)
+            validation_accuracy = calculate_accuracy(validation_predictions, hw4.validation_labels)
+            accumulated_validation_accuracy += validation_accuracy
+
+        validation_accuracies.append(accumulated_validation_accuracy / iterations_per_validation)  # Plot the average
+
+    y_min = min(validation_accuracies) - 1
+    y_max = max(validation_accuracies) + 1
+    plot(x=c_range, y=validation_accuracies, legend='Validation Accuracies',
+         x_min=c_range[0], x_max=c_range[-1], y_min=y_min, y_max=y_max,
+         xlabel='C [SVM Regularization Hyperparameter]', ylabel='Accuracy',
+         title='Section 1.B - SGD-SVM Accuracy for C')
+
 
 def ex_4_c():
-    pass
+    feature_dim = hw4.train_data.shape[1]
+    T = 20000
+    basic_step_size = 0.55
+    C = 5.7e-5
+
+    classifier = SGD_SVM(dim=feature_dim)
+    classifier.train(x=hw4.train_data, y=hw4.train_labels, C=C, T=T, basic_step_size=basic_step_size)
+
+    w = classifier.w
+
+    # Normalize w to range [0, 255] for visualization
+    weight_mat = np.divide(np.subtract(w, np.min(w)), np.subtract(np.max(w), np.min(w))) * 255
+    plt.imshow(np.reshape(weight_mat, (28, 28)), interpolation='nearest', cmap='gray')
+    plt.savefig("Section 1.C - SGD-SVM Weight Matrix.png")
+
 
 def ex_4_d():
-    pass
+    feature_dim = hw4.train_data.shape[1]
+    T = 20000
+    basic_step_size = 0.55
+    C = 5.7e-5
+    test_iterations = 10
+
+    accumulated_test_accuracy = 0
+
+    for _ in range(test_iterations):
+        classifier = SGD_SVM(dim=feature_dim)
+        classifier.train(x=hw4.train_data, y=hw4.train_labels, C=C, T=T, basic_step_size=basic_step_size)
+        test_predictions = classifier.predict(x=hw4.test_data)
+        test_accuracy = calculate_accuracy(test_predictions, hw4.test_labels)
+        accumulated_test_accuracy += test_accuracy
+
+    avg_test_accuracy = accumulated_test_accuracy / test_iterations
+    print("The average accuracy for " + str(test_iterations) + " iterations on the test set is: " +
+          "{:.2f}".format(avg_test_accuracy))
+
 
 parser = argparse.ArgumentParser(description='Choose a subsection')
 parser.add_argument('--section', help='A section of the ex')
