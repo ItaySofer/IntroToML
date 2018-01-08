@@ -183,5 +183,3 @@ if args.section == '1':
     ex_5_a()
 elif args.section == '2':
     ex_5_b()
-else
-    print()

@@ -1,0 +1,26 @@
+===============================================
+Intro to Machine Learning - Ex5
+===============================================
+Or Perel   - 200732444 [orr.perel@gmail.com]
+Itai Sofer - 201507357 [sofer.itay@gmail.com]
+===============================================
+
+1) Instructions:
+Run each of the following executables with:
+/usr/bin/python adaboost.py --section [#section_num]
+
+Each script corresponds to the relevant question.
+Each #section_num should represent the corresponding section (e.g: a=1, b=2, etc).
+
+-- IMPORTANT NOTE: Some routines output both a saved figure and a displayed plot (using matplotlib's imshow).
+If you're using remote control on Nova, make sure your connection supports the channeling of gui windows to the host machine,
+otherwise the script might appear "stuck" until the figure window is closed.
+
+2) The other auxilary files required are:
+  - hw5.py
+
+  All files are as supplied with the Exercise without modification, and present in the directory.
+
+
+3) Plots are saved within the same folder. The following plots & charts are included and attached to the printed doc as well:
+Section 1.B - AdaBoost Error per Iteration.png
