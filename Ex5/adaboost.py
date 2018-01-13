@@ -1,7 +1,7 @@
 import numpy as np
 import hw5
 import argparse
-from math import log, exp
+from math import log
 import matplotlib.pyplot as plt
 
 
@@ -24,20 +24,23 @@ class WeakLearner:
         m, d = X.shape
 
         for j in range(d):
-            sorted_X = X[X[:, j].argsort()]
+            permutation = X[:, j].argsort()
+            sorted_X = X[permutation]
+            sorted_Y = Y[permutation]
+            sorted_D = D[permutation]
             sorted_X = np.concatenate((sorted_X, (sorted_X[m - 1] + 1)[None]), axis=0)  # Add X[m+1]
-            Fpos = np.sum(D[np.where(Y > 0)])  # Sum where yi=1.   (yi is -1 or 1)
-            Fneg = 1 - Fpos  # Sum where yi=-1.  (yi is -1 or 1)
+            Fpos = np.sum(D[np.where(sorted_Y > 0)])  # Sum where yi=1.   (yi is -1 or 1)
+            Fneg = 1 - Fpos                           # Sum where yi=-1.  (yi is -1 or 1)
 
             if (Fpos < self.F_star) or (Fneg < self.F_star):
-                self.F_star = min(Fpos, Fneg)  # Save best objective found for pair of hypotheses
+                self.F_star = min(Fpos, Fneg)       # Save best objective found for pair of hypotheses
                 theta_star = sorted_X[0, j] - 1
                 j_star = j
                 b_star = 1 if Fpos <= Fneg else -1  # Bias chooses 1 of the current two hypotheses in the decision stump
 
             for i in range(m):
-                Fpos -= Y[i] * D[i]  # H uses threshold of (1,1,1,1, theta, -1,  ... -1, -1, -1)
-                Fneg += Y[i] * D[i]  # H uses threshold of (-1,-1,-1,-1 theta, 1, ... 1, 1, 1)
+                Fpos -= sorted_Y[i] * sorted_D[i]  # H uses threshold of (1,1,1,1, theta, -1,  ... -1, -1, -1)
+                Fneg += sorted_Y[i] * sorted_D[i]  # H uses threshold of (-1,-1,-1,-1 theta, 1, ... 1, 1, 1)
 
                 if (min(Fpos, Fneg) < self.F_star) and (sorted_X[i, j] != sorted_X[i + 1, j]):
                     self.F_star = min(Fpos, Fneg)
@@ -102,16 +105,8 @@ class AdaBoost:
 
     def predict(self, x):
         assert (self.h is not None) and (self.w is not None)  # Verify the AdaBoost parameters aren't None
-        # wl_predictions = np.transpose(np.array([ht(x) for ht in self.h]))  # Query all weak learners in the array
-        # return np.sign(np.sum(np.multiply(self.w, wl_predictions), axis=1))  # Return weighted result
-
-        hx = []
-        for xt in x:
-            wl_predictions = np.array([ht(xt[None]) for ht in self.h])
-            result = np.sign(np.sum(np.multiply(self.w, wl_predictions)))
-            hx.append(result)
-
-        return np.array(hx)
+        wl_predictions = np.transpose(np.array([ht(x) for ht in self.h]))  # Query all weak learners in the array
+        return np.sign(np.sum(np.multiply(self.w, wl_predictions), axis=1))  # Return weighted result
 
     def __call__(self, x):
         return self.predict(x)
@@ -172,7 +167,7 @@ def ex_5_b():
         training_errors.append(calculate_error(predictions=training_perdictions, labels=hw5.train_labels))
         test_perdictions = adaboost_iteration.predict(hw5.test_data)
         test_errors.append(calculate_error(predictions=test_perdictions, labels=hw5.test_labels))
-        print('Iteration #{0} ; Training Error: {1:.2f} ; Test Error: {2:.2f}'.format(i, training_errors[i-1], test_errors[i-1]))
+        print('Iteration #{0} ; Training Error: {1:.4f} ; Test Error: {2:.4f}'.format(i, training_errors[i-1], test_errors[i-1]))
 
     plot(x=range(1, T + 1), y1=training_errors, y1legend='Training Error', y2=test_errors,
          y2legend='Test Error', x_min=1, x_max=T+1,
